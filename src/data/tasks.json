@@ -1,0 +1,89 @@
+{ "data" : [
+    {   
+        "taskID":1,
+        "name":"complete side project",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"New",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },
+    {   
+        "taskID":2,
+        "name":"ticket 2",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"Active",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },
+    {   
+        "taskID":3,
+        "name":"ticket 3",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"Complete",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },
+    {   
+        "taskID":4,
+        "name":"ticket 4",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"Complete",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },{   
+        "taskID":5,
+        "name":"ticket 5",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"In Progress",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },{   
+        "taskID":6,
+        "name":"ticket 6",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"In Progress",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },{   
+        "taskID":7,
+        "name":"ticket 7",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"Complete",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },{   
+        "taskID":8,
+        "name":"ticket 8",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"Active",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },
+    {
+        "taskID":10,
+        "name":"ticket 10",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"Unassigned",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    },
+    {
+        "taskID":11,
+        "name":"ticket 11",
+        "InitialDate":"12 May, 2022",
+        "finalDate": "12 Dec, 2022",
+        "owner": "Satyam Kumar",
+        "status":"Rejected",
+        "description": " Basic structure of the task board is ready, making changes for the resusable components"
+    }
+] 
+}
