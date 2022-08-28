@@ -1,15 +1,46 @@
 import express, { Express, Request, Response  } from "express";
+import useRouter from "./routes";
+import * as bodyParser from 'body-parser';
 
-const app = express();
+class App{
+    public app: express.Application;
+    public port: number;
 
-const port = 9000;
+    constructor(controllers: any, port: number){
+        this.app = express();
+        this.port = port;
 
-app.get('/',(req: Request, res: Response)=>{
-    res.send('taskboard api');
-})
+        // this.initializeMiddlewares();
+        this.initializeControllers(controllers);
+    }
 
-app.listen(port,()=>{
-    console.log(`api is running on port ${port}`);
-});
+    private initializeMiddlewares(){
+        this.app.use(bodyParser.json());
+    }
 
-module.exports = app;
+    private initializeControllers(controllers: any[]){
+        controllers.forEach((controller)=>{
+            this.app.use('/',controller.router);
+        })
+    }
+
+    public listen(){
+        this.app.listen(this.port,()=>`App is listening at port ${this.port}`);
+    }
+
+}
+// const app = express();
+
+// const port = 9000;
+
+// // app.get('/',(req: Request, res: Response)=>{
+// //     res.send('taskboard api');
+// // })
+// app.use(useRouter);
+// app.listen(port,()=>{
+//     console.log(`api is running on port ${port}`);
+// });
+
+
+
+export default App;
