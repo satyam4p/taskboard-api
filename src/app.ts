@@ -1,7 +1,7 @@
 import express, { Express, Request, Response  } from "express";
 import useRouter from "./routes";
 import * as bodyParser from 'body-parser';
-
+import mongoose from "mongoose";
 class App{
     public app: express.Application;
 
@@ -9,6 +9,7 @@ class App{
         this.app = express();
 
         // this.initializeMiddlewares();
+        this.connectToDatabase();
         this.initializeControllers(controllers);
     }
 
@@ -25,6 +26,16 @@ class App{
     public listen(){
         this.app.listen(process.env.PORT,()=>`App is listening at port ${process.env.PORT}`);
     }
+
+    private connectToDatabase(){
+        const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
+        
+        mongoose.connect(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`).then(res=>{
+            console.log("Connected to MongoDB, Ready for use.")
+        }, error=>{
+            console.log("Foloowing error occured during DB connection: ",error);
+        });
+    }   
 
 }
 // const app = express();
