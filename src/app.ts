@@ -4,11 +4,9 @@ import * as bodyParser from 'body-parser';
 
 class App{
     public app: express.Application;
-    public port: number;
 
-    constructor(controllers: any, port: number){
+    constructor(controllers: any){
         this.app = express();
-        this.port = port;
 
         // this.initializeMiddlewares();
         this.initializeControllers(controllers);
@@ -25,7 +23,7 @@ class App{
     }
 
     public listen(){
-        this.app.listen(this.port,()=>`App is listening at port ${this.port}`);
+        this.app.listen(process.env.PORT,()=>`App is listening at port ${process.env.PORT}`);
     }
 
 }
