@@ -1,5 +1,5 @@
 import * as express from 'express';
-import task from './tasks.interface';
+import task from '../../interfaces/tasks.interface';
 import { data } from '../../data/tasks.json';
 
 
