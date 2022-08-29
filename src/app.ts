@@ -37,17 +37,6 @@ class App{
         });
     }   
 }
-// const app = express();
-
-// const port = 9000;
-
-// // app.get('/',(req: Request, res: Response)=>{
-// //     res.send('taskboard api');
-// // })
-// app.use(useRouter);
-// app.listen(port,()=>{
-//     console.log(`api is running on port ${port}`);
-// });
 
 
 
