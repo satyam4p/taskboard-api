@@ -8,7 +8,7 @@ class App{
     constructor(controllers: any){
         this.app = express();
 
-        // this.initializeMiddlewares();
+        this.initializeMiddlewares();
         this.connectToDatabase();
         this.initializeControllers(controllers);
     }
@@ -16,7 +16,7 @@ class App{
     private initializeMiddlewares(){
         this.app.use(bodyParser.json());
     }
-
+    
     private initializeControllers(controllers: any[]){
         controllers.forEach((controller)=>{
             this.app.use('/',controller.router);
@@ -36,7 +36,6 @@ class App{
             console.log("Foloowing error occured during DB connection: ",error);
         });
     }   
-
 }
 // const app = express();
 

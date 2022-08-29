@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 import task from '../interfaces/tasks.interface';
 
 const taskSchema= new mongoose.Schema({
-    taskID: Number,
-    name: String,
-    InitialDate: String,
-    finalDate: String,
-    owner: String,
-    status: String,
-    description: String,
+    "taskID": Number,
+    "name": String,
+    "InitialDate": String,
+    "finalDate": String,
+    "owner": String,
+    "status": String,
+    "description": String,
 });
 
 const taskModel = mongoose.model<task & mongoose.Document>('Task',taskSchema);
