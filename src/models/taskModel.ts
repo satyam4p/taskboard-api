@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import task from '../interfaces/tasks.interface';
 
 const taskSchema= new mongoose.Schema({
-    "taskID": Number,
+    "id": Number,
     "name": String,
     "InitialDate": String,
     "finalDate": String,

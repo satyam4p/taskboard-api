@@ -1,5 +1,5 @@
 interface task {
-    taskID: number;
+    id: number;
     name: string;
     InitialDate: string;
     finalDate: string;
