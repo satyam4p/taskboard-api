@@ -27,6 +27,11 @@ class taskController{
             const createdTask = new this.task(reqData);
             createdTask.save().then(task=>{
             response.send(task);
+        }).catch(error=>{
+            response.status(400).send({
+                "message":"Error occured",
+                "error":error
+            })
         });
         }catch(error){
             console.log("Error in creating task:: ",error);
@@ -39,7 +44,7 @@ class taskController{
         try{
             this.task.find().then(tasks=>{
                 response.status(200).send(tasks);
-            })
+            });
         }catch(error){
             console.log("Error in fetching all tasks:: ",error);
             response.status(401).send({
@@ -54,9 +59,13 @@ class taskController{
             const returnedTask = await this.task.findOneAndDelete({
                 id: id
             })
-            response.status(200).send({
-                "message": "Task Successfully deleted",
-            });
+            if(returnedTask){
+                response.status(200).send({
+                    "message": "Task Successfully deleted",
+                });
+            }else{
+                response.status(400).send("Some error occured");
+            }
         }catch(error){
             console.log("Error in deleting tasks:: ",error);
             response.status(401).send({
