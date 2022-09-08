@@ -2,6 +2,7 @@ import express, { Express, Request, Response  } from "express";
 import useRouter from "./routes";
 import * as bodyParser from 'body-parser';
 import mongoose from "mongoose";
+const cors = require('cors');
 class App{
     public app: express.Application;
 
@@ -14,6 +15,7 @@ class App{
     }
 
     private initializeMiddlewares(){
+        this.app.use(cors());
         this.app.use(express.json());
     }
     
