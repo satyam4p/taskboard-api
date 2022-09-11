@@ -11,7 +11,6 @@ class taskController{
 
     constructor(){
         this.initializeRoutes();
-        console.log("routes initialized")
     }
 
     public initializeRoutes(){
