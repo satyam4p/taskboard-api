@@ -17,7 +17,7 @@ class taskController{
 
         this.router.get(this.path, this.getAllTasks);/** creating a get request path and collback function for it */
         this.router.post(`${this.path}/create`, this.createTask);
-        this.router.patch(`${this.path}/update/:id`, this.updateTask);
+        this.router.patch(`${this.path}/updateStatus/:id`, this.updateTaskStatus);
         this.router.delete("/tasks/delete/:id", this.deleteTask);
     }
 
@@ -53,19 +53,20 @@ class taskController{
         }
     }
 
-    updateTask = async (request: express.Request, response:express.Response) =>{
+    updateTaskStatus = async (request: express.Request, response:express.Response) =>{
         try{
             const id = request.params.id;
-            let queryResponse = await this.task.findOneAndUpdate({
-                id: id
-                },
-                {...request.body}
-            );
-            if(queryResponse){
-                response.status(200).send({
-                    message:"task updated successfuly"
-                })
-            }
+            console.log("request:: ",request);
+            // let queryResponse = await this.task.findOneAndUpdate({
+            //     id: id
+            //     },
+            //     {...request.body}
+            // );
+            // if(queryResponse){
+            //     response.status(200).send({
+            //         message:"task updated successfuly"
+            //     })
+            // }
         }catch(error){
             console.log("error while update:: ",error);
             response.status(401).send({
