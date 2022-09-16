@@ -56,24 +56,22 @@ class taskController{
     updateTaskStatus = async (request: express.Request, response:express.Response) =>{
         try{
             const id = request.params.id;
-            console.log("request:: ",request);
-            // let queryResponse = await this.task.findOneAndUpdate({
-            //     id: id
-            //     },
-            //     {...request.body}
-            // );
-            // if(queryResponse){
-            //     response.status(200).send({
-            //         message:"task updated successfuly"
-            //     })
-            // }
+            let queryResponse = await this.task.findOneAndUpdate({
+                id: id
+                },
+                {...request.body}
+            );
+            if(queryResponse){
+                response.status(200).send({
+                    message:"task updated successfuly"
+                })
+            }
         }catch(error){
             console.log("error while update:: ",error);
             response.status(401).send({
                 message:"An error occured"
             });
         }
-
     }
     
     deleteTask = async (request: express.Request, response: express.Response)=>{
@@ -95,10 +93,7 @@ class taskController{
                 "message":"Some error occured"
             })
         }
-        
     }
-
-
 }
 
 export default taskController;
