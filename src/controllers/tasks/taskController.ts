@@ -2,6 +2,7 @@ import * as express from 'express';
 import task from '../../interfaces/tasks.interface';
 import { data } from '../../data/tasks.json';
 import taskModel from '../../models/taskModel';
+import HttpException from '../../exceptions/HttpExceptions';
 
 class taskController{
 
@@ -53,45 +54,39 @@ class taskController{
         }
     }
 
-    updateTaskStatus = async (request: express.Request, response:express.Response) =>{
+    updateTaskStatus = async (request: express.Request, response:express.Response, next:express.NextFunction) =>{
         try{
+            console.log("request reeived:: ",request.body);
             const id = request.params.id;
             let queryResponse = await this.task.findOneAndUpdate({
                 id: id
                 },
                 {...request.body}
             );
+            console.log("query Response:: ",queryResponse);
             if(queryResponse){
                 response.status(200).send({
                     message:"task updated successfuly"
                 })
+            }else{
+                next(new HttpException(404,"Task not found"));    
             }
         }catch(error){
-            console.log("error while update:: ",error);
-            response.status(401).send({
-                message:"An error occured"
-            });
+            next(new HttpException(401,"Something went wrong"));
         }
     }
     
-    deleteTask = async (request: express.Request, response: express.Response)=>{
-        try{
-            const id = request.params.id;
-            const returnedTask = await this.task.findOneAndDelete({
+    deleteTask = async (request: express.Request, response: express.Response, next:express.NextFunction)=>{
+        const id = request.params.id;
+        const returnedTask = await this.task.findOneAndDelete({
                 id: id
-            })
-            if(returnedTask){
-                response.status(200).send({
-                    "message": "Task Successfully deleted",
-                });
-            }else{
-                response.status(400).send("Some error occured");
-            }
-        }catch(error){
-            console.log("Error in deleting tasks:: ",error);
-            response.status(401).send({
-                "message":"Some error occured"
-            })
+            });
+        if(returnedTask){
+            response.status(200).send({
+                "message": "Task Successfully deleted",
+            });
+        }else{
+            next(new HttpException(400, 'Some error occured'));
         }
     }
 }

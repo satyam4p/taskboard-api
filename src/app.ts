@@ -2,6 +2,7 @@ import express, { Express, Request, Response  } from "express";
 import useRouter from "./routes";
 import * as bodyParser from 'body-parser';
 import mongoose from "mongoose";
+import errorMiddleware from "./middleware/error.middleware";
 const cors = require('cors');
 class App{
     public app: express.Application;
@@ -12,6 +13,7 @@ class App{
         this.initializeMiddlewares();
         this.connectToDatabase();
         this.initializeControllers(controllers);
+        this.initializeErrorMiddleware();
     }
 
     private initializeMiddlewares(){
@@ -19,6 +21,10 @@ class App{
         this.app.use(express.json());
     }
     
+    private initializeErrorMiddleware(){
+        this.app.use(errorMiddleware);        
+    }
+
     private initializeControllers(controllers: any[]){
         controllers.forEach((controller)=>{
             this.app.use('/',controller.router);
