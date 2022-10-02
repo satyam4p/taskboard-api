@@ -3,7 +3,9 @@ import useRouter from "./routes";
 import * as bodyParser from 'body-parser';
 import mongoose from "mongoose";
 import errorMiddleware from "./middleware/error.middleware";
+import validationMiddleware from "./middleware/Validation.middleware";
 const cors = require('cors');
+
 class App{
     public app: express.Application;
 

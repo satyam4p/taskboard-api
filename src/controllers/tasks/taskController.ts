@@ -3,6 +3,8 @@ import task from '../../interfaces/tasks.interface';
 import { data } from '../../data/tasks.json';
 import taskModel from '../../models/taskModel';
 import HttpException from '../../exceptions/HttpExceptions';
+import validationMiddleware from '../../middleware/Validation.middleware';
+import CreateTaskDto from '../../dto/CreateTask.dto';
 
 class taskController{
 
@@ -15,9 +17,11 @@ class taskController{
     }
 
     public initializeRoutes(){
-
-        this.router.get(this.path, this.getAllTasks);/** creating a get request path and collback function for it */
-        this.router.post(`${this.path}/create`, this.createTask);
+        /** creating a get request path and collback function for it */
+        this.router.get(this.path, this.getAllTasks);
+        /**adding validationmiddleware to validate the  incoming create request with dto class */
+        this.router.post(`${this.path}/create`, validationMiddleware(CreateTaskDto), this.createTask);
+        //need to create dto class for following routes
         this.router.patch(`${this.path}/updateStatus/:id`, this.updateTaskStatus);
         this.router.delete("/tasks/delete/:id", this.deleteTask);
     }
@@ -38,7 +42,6 @@ class taskController{
             console.log("Error in creating task:: ",error);
             response.status(401).send("Some Error Occurred");
         };
-        
     }
 
     getAllTasks=(request: express.Request, response: express.Response)=>{

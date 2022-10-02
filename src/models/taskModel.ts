@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 import task from '../interfaces/tasks.interface';
 
 const taskSchema= new mongoose.Schema({
-    "id": Number,
-    "name": String,
-    "InitialDate": String,
-    "finalDate": String,
-    "owner": String,
-    "status": String,
-    "description": String,
+    "id": {type: Number, required: true, unique: true},
+    "name": {type: String, required: true},
+    "InitialDate": {type: String, required: true},
+    "finalDate": {type: String, required: true},
+    "owner": {type: String, required: true},
+    "status": {type: String, required: true},
+    "description": {type: String, required: true},
 });
 
 const taskModel = mongoose.model<task & mongoose.Document>('Task',taskSchema);
