@@ -1,6 +1,5 @@
 import * as express from 'express';
 import task from '../../interfaces/tasks.interface';
-import { data } from '../../data/tasks.json';
 import taskModel from '../../models/taskModel';
 import HttpException from '../../exceptions/HttpExceptions';
 import validationMiddleware from '../../middleware/Validation.middleware';
@@ -22,7 +21,7 @@ class taskController{
         /**adding validationmiddleware to validate the  incoming create request with dto class */
         this.router.post(`${this.path}/create`, validationMiddleware(CreateTaskDto), this.createTask);
         //need to create dto class for following routes
-        this.router.patch(`${this.path}/updateStatus/:id`, this.updateTaskStatus);
+        this.router.patch(`${this.path}/updateStatus/:id`, validationMiddleware(CreateTaskDto), this.updateTaskStatus);
         this.router.delete("/tasks/delete/:id", this.deleteTask);
     }
 

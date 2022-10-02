@@ -1,11 +1,11 @@
 import { plainToInstance } from "class-transformer";
 import * as express from 'express';
-import { validate, ValidationError } from 'class-validator';
+import { validate, ValidationError,  } from 'class-validator';
 import HttpException from "../exceptions/HttpExceptions";
 
 function validationMiddleware<T>(type:any):express.RequestHandler {
     return (req, res, next)=>{
-        validate(plainToInstance(type, req.body))
+        validate(plainToInstance(type, req.body), { skipMissingProperties: true})
             .then((errors:ValidationError[])=>{
                 if(errors.length > 0){
                     const message = errors.map((error:ValidationError)=> {
