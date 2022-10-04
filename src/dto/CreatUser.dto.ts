@@ -4,7 +4,7 @@ import { IsString } from 'class-validator'
 class UserDto{
 
     @IsString()
-    public name!: String;
+    public username!: String;
 
     @IsString()
     public password!: String;
