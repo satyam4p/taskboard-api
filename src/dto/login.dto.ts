@@ -7,7 +7,7 @@ class LogInDto{
     public email!: String;
 
     @IsString()
-    public passwword!: String;
+    public password!: String;
 
 }
 
