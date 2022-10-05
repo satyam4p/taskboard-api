@@ -7,6 +7,10 @@ import WrongCredentialsExceptioon from "../../exceptions/WrongCredentialsExcepti
 import validationMiddleware from "../../middleware/Validation.middleware";
 import UserDto from "../../dto/CreatUser.dto";
 import LogInDto from "../../dto/login.dto";
+import User from "../../interfaces/user.interface";
+import * as jwt from 'jsonwebtoken';
+import DataStoreInToken from "../../interfaces/dataStoredInToken.interface";
+import TokenData from "../../interfaces/token.interface";
 
 class AuthController{
     
@@ -53,6 +57,8 @@ class AuthController{
             )
             if(isPasswordMatching){
                 user.password = undefined;
+                const tokenData = this.createToken(user);
+                response.setHeader('Set-Cookie',[this.createCookie(tokenData)]);
                 response.status(200).send(user);
             }else{
                 next( new WrongCredentialsExceptioon());
@@ -61,6 +67,23 @@ class AuthController{
             next(new WrongCredentialsExceptioon());
         }
     }
+
+    createToken=(user: User)=>{
+        const expiresIn = 60 * 60;
+        const dataStoreInToken: DataStoreInToken = {
+            _id : user._id,
+        };
+        return {
+            expiresIn,
+            token: jwt.sign(dataStoreInToken, process.env.JWT_SECRET as string, { expiresIn })
+        }
+    }
+    
+    private createCookie=(tokenData: TokenData)=>{
+        return `Autherization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+    }
+
+
 }
 
 
