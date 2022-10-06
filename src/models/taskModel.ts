@@ -7,6 +7,7 @@ const taskSchema= new mongoose.Schema({
     "InitialDate": {type: String, required: true},
     "finalDate": {type: String, required: true},
     "owner": {type: String, required: true},
+    "ownerId": {type: String},
     "status": {type: String, required: true},
     "description": {type: String, required: true},
 });
