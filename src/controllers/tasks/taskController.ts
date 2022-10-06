@@ -4,6 +4,7 @@ import taskModel from '../../models/taskModel';
 import HttpException from '../../exceptions/HttpExceptions';
 import validationMiddleware from '../../middleware/Validation.middleware';
 import CreateTaskDto from '../../dto/CreateTask.dto';
+import authMiddleware from '../../middleware/auth.middleware';
 
 class taskController{
 
@@ -16,13 +17,17 @@ class taskController{
     }
 
     public initializeRoutes(){
+        
         /** creating a get request path and collback function for it */
         this.router.get(this.path, this.getAllTasks);
         /**adding validationmiddleware to validate the  incoming create request with dto class */
         this.router.post(`${this.path}/create`, validationMiddleware(CreateTaskDto), this.createTask);
         //need to create dto class for following routes
-        this.router.patch(`${this.path}/updateStatus/:id`, validationMiddleware(CreateTaskDto), this.updateTaskStatus);
-        this.router.delete("/tasks/delete/:id", this.deleteTask);
+        this.router.all(`${this.path}/*`,authMiddleware)
+        .patch(`${this.path}/updateStatus/:id`, validationMiddleware(CreateTaskDto), this.updateTaskStatus)
+        .delete("/tasks/delete/:id", this.deleteTask);
+        // this.router.patch(`${this.path}/updateStatus/:id`, validationMiddleware(CreateTaskDto), this.updateTaskStatus);
+        // this.router.delete("/tasks/delete/:id", this.deleteTask);
     }
 
     createTask=(request: express.Request, response: express.Response)=>{

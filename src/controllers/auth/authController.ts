@@ -82,8 +82,6 @@ class AuthController{
     private createCookie=(tokenData: TokenData)=>{
         return `Autherization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
     }
-
-
 }
 
 

@@ -3,7 +3,7 @@ import useRouter from "./routes";
 import * as bodyParser from 'body-parser';
 import mongoose from "mongoose";
 import errorMiddleware from "./middleware/error.middleware";
-import validationMiddleware from "./middleware/Validation.middleware";
+import cookieParser from "cookie-parser";
 const cors = require('cors');
 
 class App{
@@ -21,6 +21,7 @@ class App{
     private initializeMiddlewares(){
         this.app.use(cors());
         this.app.use(express.json());
+        this.app.use(cookieParser());
     }
     
     private initializeErrorMiddleware(){
