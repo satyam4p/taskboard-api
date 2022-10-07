@@ -25,6 +25,7 @@ class AuthController{
     public initializeRoutes(){
         this.router.use(`${this.path}/register`, validationMiddleware(UserDto), this.registerUser);
         this.router.use(`${this.path}/login`, validationMiddleware(LogInDto), this.loginUser);
+        this.router.use(`${this.path}/logout`, validationMiddleware(LogInDto), this.logoutUser);
     }
 
     registerUser = async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
@@ -66,6 +67,11 @@ class AuthController{
         }else{
             next(new WrongCredentialsExceptioon());
         }
+    }
+
+    logoutUser=(request: express.Request, response: express.Response)=>{
+        response.setHeader('Set-Cookie',["Authorization=;Max-age=0"]);
+        response.send(200);
     }
 
     createToken=(user: User)=>{
