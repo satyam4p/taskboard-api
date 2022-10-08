@@ -3,10 +3,9 @@ interface task {
     name: string;
     InitialDate: string;
     finalDate: string;
-    owner: string;
+    ownerId: string;
     status: string;
     description: string;
-    ownerId: string
 }
 
 export default task;

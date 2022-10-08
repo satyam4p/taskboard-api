@@ -2,12 +2,11 @@ import mongoose from "mongoose";
 import task from '../interfaces/tasks.interface';
 
 const taskSchema= new mongoose.Schema({
-    "id": {type: Number, required: true, unique: true},
     "name": {type: String, required: true},
     "InitialDate": {type: String, required: true},
     "finalDate": {type: String, required: true},
-    "owner": {type: String, required: true},
-    "ownerId": {type: String},
+    "ownerId": {type: mongoose.Schema.Types.ObjectId,
+            ref:'User'},
     "status": {type: String, required: true},
     "description": {type: String, required: true},
 });
