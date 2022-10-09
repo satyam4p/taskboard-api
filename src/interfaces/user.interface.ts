@@ -1,8 +1,17 @@
-interface User {
+import mongoose from "mongoose";
+export interface User extends mongoose.Document{
     _id: string,
     username: string,
     email: string,
-    password?: string
+    password?: string,
+    token:string,
+    tokens?: [
+        {
+            token: string
+        }
+    ] | []
 }
 
-export default User;
+export interface UserMethods{
+    generateAuthToken(): String;
+}

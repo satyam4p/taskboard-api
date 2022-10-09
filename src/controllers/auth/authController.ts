@@ -7,10 +7,12 @@ import WrongCredentialsExceptioon from "../../exceptions/WrongCredentialsExcepti
 import validationMiddleware from "../../middleware/Validation.middleware";
 import UserDto from "../../dto/CreatUser.dto";
 import LogInDto from "../../dto/login.dto";
-import User from "../../interfaces/user.interface";
+import { User } from "../../interfaces/user.interface";
 import * as jwt from 'jsonwebtoken';
 import DataStoreInToken from "../../interfaces/dataStoredInToken.interface";
 import TokenData from "../../interfaces/token.interface";
+import authMiddleware from "../../middleware/auth.middleware";
+import RequestWithUser from "../../interfaces/requestWithUser.interface";
 
 class AuthController{
     
@@ -25,7 +27,8 @@ class AuthController{
     public initializeRoutes(){
         this.router.use(`${this.path}/register`, validationMiddleware(UserDto), this.registerUser);
         this.router.use(`${this.path}/login`, validationMiddleware(LogInDto), this.loginUser);
-        this.router.use(`${this.path}/logout`, validationMiddleware(LogInDto), this.logoutUser);
+        this.router.use(`${this.path}/logout`, authMiddleware, validationMiddleware(LogInDto), this.logoutUser);
+        this.router.use(`${this.path}/logoutAll`, authMiddleware, validationMiddleware(LogInDto), this.logoutUserFromAllSessions);
     }
 
     registerUser = async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
@@ -40,8 +43,10 @@ class AuthController{
                 ...userData,
                 password: hashedPassword
             });
+            const token = await user.generateAuthToken();
             user.password = undefined;
-            response.send(user);
+            user.tokens = undefined;
+            response.send({user,token});
         };
     }
 
@@ -57,10 +62,10 @@ class AuthController{
                 user.get('password', null, { getters: false })
             )
             if(isPasswordMatching){
+                const token = await user.generateAuthToken();
                 user.password = undefined;
-                const tokenData = this.createToken(user);
-                response.setHeader('Set-Cookie',[this.createCookie(tokenData)]);
-                response.status(200).send(user);
+                user.tokens = undefined;
+                response.status(200).send({user, token});
             }else{
                 next( new WrongCredentialsExceptioon());
             }
@@ -69,25 +74,23 @@ class AuthController{
         }
     }
 
-    logoutUser=(request: express.Request, response: express.Response)=>{
-        response.setHeader('Set-Cookie',["Authorization=;Max-age=0"]);
+    logoutUser= async (request: express.Request, response: express.Response)=>{
+        const requestWithUser = request as RequestWithUser;
+        const user = requestWithUser.user;
+        const result = user.tokens?.filter(token=>token.token !== requestWithUser.token);
+        user.tokens = result as User["tokens"];
+        await user.save();
         response.send(200);
     }
 
-    createToken=(user: User)=>{
-        const expiresIn = 60 * 60;
-        const dataStoreInToken: DataStoreInToken = {
-            _id : user._id,
-        };
-        return {
-            expiresIn,
-            token: jwt.sign(dataStoreInToken, process.env.JWT_SECRET as string, { expiresIn })
-        }
+    logoutUserFromAllSessions= async (request: express.Request, response: express.Response)=>{
+        const requestWithUser = request as RequestWithUser;
+        const user = requestWithUser.user;
+        user.tokens = [];
+        await user.save();
+        response.send(200);
     }
-    
-    private createCookie=(tokenData: TokenData)=>{
-        return `Autherization=${tokenData.token}; HttpOnly; secure: false; Max-Age=${tokenData.expiresIn}`;
-    }
+
 }
 
 

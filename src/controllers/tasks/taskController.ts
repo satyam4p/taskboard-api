@@ -37,12 +37,10 @@ class taskController{
 
             const reqData = request.body;
             const requestUser = request as RequestWithUser;
-            console.log("requestUser.user",requestUser.user);
             const createdTask = new this.task({
                 ...reqData,
                 ownerId: requestUser.user._id
             });
-            console.log("createdTask:: ",createdTask);
             createdTask.save().then(task=>{
             response.send(task);
         }).catch(error=>{
@@ -63,7 +61,6 @@ class taskController{
                 response.status(200).send(tasks);
             });
         }catch(error){
-            console.log("Error in fetching all tasks:: ",error);
             response.status(401).send({
                 "message":"Some error occured"
             })

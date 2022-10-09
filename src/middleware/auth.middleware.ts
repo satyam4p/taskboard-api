@@ -9,16 +9,16 @@ import AuthenticationTokenMissingException from '../exceptions/AuthenticationTok
 
 async function authMiddleware(request: express.Request, response: express.Response, next: express.NextFunction){
     const requestWithUser = request as RequestWithUser;
-    const cookies = requestWithUser.cookies;
-    if(cookies){
+    const token = requestWithUser.header('Authorization')?.replace('Bearer ','');
+    if(token){
         const secret = process.env.JWT_SECRET;
         try{
-            const verificationResponse = jwt.verify(cookies.Autherization, secret as string) as DataStoreInToken;
+            const verificationResponse = jwt.verify(token as string, secret as string) as DataStoreInToken;
             const id = verificationResponse._id;
-            const user = await userModel.findById(id);
-            console.log("user:: ",user);
+            const user = await userModel.findOne({_id: id, 'tokens.token': token});
             if(user){
                 requestWithUser.user = user;
+                requestWithUser.token = token;
                 next();
             }else{
                 next(new WrongAuthenticationTokenException());
