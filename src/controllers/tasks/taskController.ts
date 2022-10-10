@@ -71,12 +71,11 @@ class taskController{
         try{
             console.log("request reeived:: ",request.body);
             const id = request.params.id;
-            let queryResponse = await this.task.findOneAndUpdate({
-                id: id
+            let queryResponse = await this.task.findByIdAndUpdate({
+                _id: id
                 },
                 {...request.body}
             );
-            console.log("query Response:: ",queryResponse);
             if(queryResponse){
                 response.status(200).send({
                     message:"task updated successfuly"
@@ -91,9 +90,9 @@ class taskController{
     
     deleteTask = async (request: express.Request, response: express.Response, next:express.NextFunction)=>{
         const id = request.params.id;
-        const returnedTask = await this.task.findOneAndDelete({
-                id: id
-            });
+        const returnedTask = await this.task.findByIdAndDelete({
+            _id: id
+        });
         if(returnedTask){
             response.status(200).send({
                 "message": "Task Successfully deleted",
