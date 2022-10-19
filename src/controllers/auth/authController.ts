@@ -25,10 +25,11 @@ class AuthController{
     }
 
     public initializeRoutes(){
-        this.router.use(`${this.path}/register`, validationMiddleware(UserDto), this.registerUser);
-        this.router.use(`${this.path}/login`, validationMiddleware(LogInDto), this.loginUser);
-        this.router.use(`${this.path}/logout`, authMiddleware, validationMiddleware(LogInDto), this.logoutUser);
-        this.router.use(`${this.path}/logoutAll`, authMiddleware, validationMiddleware(LogInDto), this.logoutUserFromAllSessions);
+        this.router.post(`${this.path}/register`, validationMiddleware(UserDto), this.registerUser);
+        this.router.post(`${this.path}/login`, validationMiddleware(LogInDto), this.loginUser);
+        this.router.post(`${this.path}/logout`, authMiddleware, validationMiddleware(LogInDto), this.logoutUser);
+        this.router.post(`${this.path}/logoutAll`, authMiddleware, validationMiddleware(LogInDto), this.logoutUserFromAllSessions);
+        this.router.get(`${this.path}/refresh`, this.refreshToken);
     }
 
     registerUser = async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
@@ -63,8 +64,23 @@ class AuthController{
             )
             if(isPasswordMatching){
                 const token = await user.generateAuthToken();
+                const refreshToken = jwt.sign({
+                    email: user.email
+                },
+                process.env.REFRESH_TOKEN_SECRET as string,
+                { expiresIn:  60 * 60 }
+                );
                 user.password = undefined;
                 user.tokens = undefined;
+                // response.setHeader('Set-Cookie',[`jwt=${refreshToken},HttpOnly;Max-Age=${60*60}`]);
+                response.cookie('jwt',refreshToken,
+                {
+                    httpOnly: true,//accessible only on web server
+                    secure: true, //for https
+                    sameSite:'none',//cross-site cookie
+                    maxAge: 60 * 60 * 1000//cookie expiry set to 1hr
+                });
+                console.log(response.cookie);
                 response.status(200).send({user, token});
             }else{
                 next( new WrongCredentialsExceptioon());
@@ -89,6 +105,29 @@ class AuthController{
         user.tokens = [];
         await user.save();
         response.send(200);
+    }
+
+    refreshToken = async (request: express.Request, response: express.Response)=>{
+        // const requestWithUser = request as RequestWithUser;
+        const cookies = request.cookies;
+        console.log(cookies);
+        if(!cookies?.jwt) return response.status(401).send({message: 'Unauthorized'});
+
+        const refreshToken = cookies.jwt;
+        console.log("token:: ",refreshToken);
+        jwt.verify(
+            refreshToken,
+            process.env.REFRESH_TOKEN_SECRET as string,
+            async (err:any, decoded:any)=>{
+
+                if(err) return response.status(403).send({message:'forbidden'});
+                // console.log(decoded);
+                const foundUser = await this.user.findOne()
+
+            }
+        )
+        
+
     }
 
 }
