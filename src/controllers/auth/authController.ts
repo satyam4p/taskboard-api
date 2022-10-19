@@ -1,7 +1,6 @@
 import * as express from "express";
 import * as bcrypt from 'bcrypt';
 import userModel from "../../models/user.model";
-import HttpException from "../../exceptions/HttpExceptions";
 import UserWithSameEmailAreadyExisitsException from "../../exceptions/UserAlreadyExistsWithSameEmailException";
 import WrongCredentialsExceptioon from "../../exceptions/WrongCredentialsExceptioon";
 import validationMiddleware from "../../middleware/Validation.middleware";
@@ -10,7 +9,6 @@ import LogInDto from "../../dto/login.dto";
 import { User } from "../../interfaces/user.interface";
 import * as jwt from 'jsonwebtoken';
 import DataStoreInToken from "../../interfaces/dataStoredInToken.interface";
-import TokenData from "../../interfaces/token.interface";
 import authMiddleware from "../../middleware/auth.middleware";
 import RequestWithUser from "../../interfaces/requestWithUser.interface";
 
@@ -72,7 +70,6 @@ class AuthController{
                 );
                 user.password = undefined;
                 user.tokens = undefined;
-                // response.setHeader('Set-Cookie',[`jwt=${refreshToken},HttpOnly;Max-Age=${60*60}`]);
                 response.cookie('jwt',refreshToken,
                 {
                     httpOnly: true,//accessible only on web server
@@ -108,26 +105,32 @@ class AuthController{
     }
 
     refreshToken = async (request: express.Request, response: express.Response)=>{
-        // const requestWithUser = request as RequestWithUser;
+
         const cookies = request.cookies;
-        console.log(cookies);
         if(!cookies?.jwt) return response.status(401).send({message: 'Unauthorized'});
 
         const refreshToken = cookies.jwt;
-        console.log("token:: ",refreshToken);
         jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET as string,
             async (err:any, decoded:any)=>{
 
                 if(err) return response.status(403).send({message:'forbidden'});
-                // console.log(decoded);
-                const foundUser = await this.user.findOne()
 
+                const foundUser = await this.user.findOne({
+                    email: decoded?.email
+                });
+
+                if(!foundUser) return response.status(401).send({message:'Unauthorized'});
+
+                const dataStoredInToken: DataStoreInToken = {
+                    _id: foundUser._id
+                };
+                const expiresIn = 60 * 60;
+                const token = await foundUser.generateAuthToken();
+                response.send({ token });
             }
-        )
-        
-
+        );
     }
 
 }
