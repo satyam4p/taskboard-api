@@ -4,6 +4,7 @@ import * as bodyParser from 'body-parser';
 import mongoose from "mongoose";
 import errorMiddleware from "./middleware/error.middleware";
 import cookieParser from "cookie-parser";
+import { corsOptions } from "./config/corsOptions";
 const cors = require('cors');
 
 class App{
@@ -19,7 +20,7 @@ class App{
     }
 
     private initializeMiddlewares(){
-        this.app.use(cors());
+        this.app.use(cors(corsOptions));
         this.app.use(express.json());
         this.app.use(cookieParser());
     }
