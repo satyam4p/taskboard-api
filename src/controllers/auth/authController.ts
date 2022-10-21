@@ -126,13 +126,15 @@ class AuthController{
                 const dataStoredInToken: DataStoreInToken = {
                     _id: foundUser._id
                 };
+                
                 const expiresIn = 60 * 60;
                 const token = await foundUser.generateAuthToken();
-                response.send({ token });
+                foundUser.tokens = undefined;
+                foundUser.password = undefined;
+                response.send({ user: foundUser, token });
             }
         );
     }
-
 }
 
 
