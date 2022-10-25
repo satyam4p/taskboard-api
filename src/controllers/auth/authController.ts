@@ -77,7 +77,6 @@ class AuthController{
                     sameSite:'none',//cross-site cookie
                     maxAge: 60 * 60 * 1000//cookie expiry set to 1hr
                 });
-                console.log(response.cookie);
                 response.status(200).send({user, token});
             }else{
                 next( new WrongCredentialsExceptioon());
@@ -88,6 +87,7 @@ class AuthController{
     }
 
     logoutUser= async (request: express.Request, response: express.Response)=>{
+        
         const requestWithUser = request as RequestWithUser;
         const user = requestWithUser.user;
         const result = user.tokens?.filter(token=>token.token !== requestWithUser.token);
