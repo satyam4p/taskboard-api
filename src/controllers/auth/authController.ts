@@ -28,6 +28,7 @@ class AuthController{
         this.router.post(`${this.path}/logout`, authMiddleware, validationMiddleware(LogInDto), this.logoutUser);
         this.router.post(`${this.path}/logoutAll`, authMiddleware, validationMiddleware(LogInDto), this.logoutUserFromAllSessions);
         this.router.get(`${this.path}/refresh`, this.refreshToken);
+        this.router.get(`${this.path}/me`, authMiddleware, validationMiddleware(LogInDto), this.getUser);
     }
 
     registerUser = async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
@@ -134,6 +135,16 @@ class AuthController{
                 response.send({ user: foundUser, token });
             }
         );
+    }
+    getUser= async (request:express.Request, response:express.Response)=>{
+        const { user } = request as RequestWithUser;
+        if(user){
+            user.password = undefined;
+            user.tokens = undefined;
+            response.send(user).sendStatus(200);
+        }else{
+            response.send({'message':'user not found'}).sendStatus(404);
+        }
     }
 }
 
