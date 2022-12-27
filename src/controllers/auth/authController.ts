@@ -141,7 +141,7 @@ class AuthController{
         if(user){
             user.password = undefined;
             user.tokens = undefined;
-            response.send(user).sendStatus(200);
+            response.send(user);
         }else{
             response.send({'message':'user not found'}).sendStatus(404);
         }
