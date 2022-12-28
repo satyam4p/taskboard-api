@@ -6,6 +6,8 @@ interface task {
     ownerId: string;
     status: string;
     description: string;
+    assignee: string;
+    label: string;
 }
 
 export default task;

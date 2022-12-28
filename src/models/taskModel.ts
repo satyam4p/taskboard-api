@@ -9,6 +9,9 @@ const taskSchema= new mongoose.Schema({
             ref:'User'},
     "status": {type: String, required: true},
     "description": {type: String, required: true},
+    "assignee": {type: mongoose.Schema.Types.ObjectId,
+            ref:'User'},
+    "label": {type: String}
 });
 
 const taskModel = mongoose.model<task & mongoose.Document>('Task',taskSchema);

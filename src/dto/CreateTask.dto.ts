@@ -34,6 +34,11 @@ class CreateTaskDto{
         return this.name;
     }
 
+    @IsString()
+    public assignee!: String;
+
+    @IsString()
+    public label!: String;
 }
 
 export default CreateTaskDto;
