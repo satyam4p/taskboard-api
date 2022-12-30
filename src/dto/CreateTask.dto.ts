@@ -35,7 +35,7 @@ class CreateTaskDto{
     }
 
     @IsString()
-    public assignee!: String;
+    public assignee!: String | undefined;
 
     @IsString()
     public label!: String;
