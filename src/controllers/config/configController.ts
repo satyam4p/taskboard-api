@@ -24,6 +24,8 @@ class ConfigController {
         .post(`${this.path}/create`, validationMiddleware(CreateTaskConfigDTO),this.createTaskConfig)
         // .post(`${this.path}/create`,this.createTaskConfig)
         .get(`${this.path}/:id`,this.getTaskConfig)
+        .delete(`${this.path}/delete/:id`, this.deleteConfig)
+        .patch(`${this.path}/:id`, validationMiddleware(CreateTaskConfigDTO), this.updateConfig)
 
     }
 
@@ -73,6 +75,61 @@ class ConfigController {
             console.log(`error occured whilefeching config for org ${request.params.id}`);
             response.status(404).send("Config does not exisits");
         }   
+    }
+
+    updateConfig= async (request: express.Request, response: express.Response)=>{
+        console.log("req received");
+        const reqId = request.params.id;
+        const reqData = request.body;
+        try{
+            const reqWUser = request as RequestWithUser;
+            const existingConfig = await this.config.findOne({
+                organisation: reqWUser.user._id
+            });
+            if(existingConfig){
+                const res = await this.config.updateOne({
+                    ...reqData
+                });
+                console.log("res:: ",res);
+                if(res){
+                    response.status(200).send({
+                        message:"config updated successfully"
+                    })
+                    return;
+                }
+            }
+            response.status(404).send({
+                message:"config does not exists"
+            });
+            return;
+        }catch(error){
+            console.log("an error occured while updating the config:: ",error);
+            response.send({
+                message:"an error occured while updating the config"
+            })
+        }
+    }
+
+    deleteConfig= async (request: express.Request, response: express.Response)=>{
+
+        const reqId = request.params.id;
+        try{
+            const reqWUser = request as RequestWithUser;
+            const deltedConfig = await this.config.deleteOne({
+                organisation: reqWUser.user._id
+            })
+            if(deltedConfig){
+                response.status(200).send({
+                    message:"config has been deleted successfully"
+                })
+            }
+        }catch(error){
+            console.log("an error occured while deleting the config:: ",reqId);
+            response.status(402).send({
+                message:"the config does not exists"
+            })
+        }
+
     }
 }
 
