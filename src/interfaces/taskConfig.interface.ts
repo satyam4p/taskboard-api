@@ -29,7 +29,7 @@ interface taskConfigInterface{
         label: string,
         viible: boolean
     },
-    organisation: string
+    organisation?: string
 }
 
 export default taskConfigInterface;

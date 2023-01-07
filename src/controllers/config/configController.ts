@@ -5,6 +5,7 @@ import validationMiddleware from "../../middleware/Validation.middleware";
 import CreateTaskConfigDTO from "../../dto/createTaskConfig.dto";
 import RequestWithUser from "../../interfaces/requestWithUser.interface";
 import { isObjectEqual } from "../../utils/isEquals";
+import { cloneDeep } from "lodash";
 
 class ConfigController {
 
@@ -20,8 +21,8 @@ class ConfigController {
 
         this.router.all(`${this.path}/*`, authMiddleware)
         /** need to create proper dto for config validation */
-        // .post(`${this.path}/create`, validationMiddleware(CreateTaskConfigDTO),this.createTaskConfig)
-        .post(`${this.path}/create`,this.createTaskConfig)
+        .post(`${this.path}/create`, validationMiddleware(CreateTaskConfigDTO),this.createTaskConfig)
+        // .post(`${this.path}/create`,this.createTaskConfig)
         .get(`${this.path}/:id`,this.getTaskConfig)
 
     }
@@ -33,17 +34,22 @@ class ConfigController {
             const existingConfig = await this.config.findOne({
                 organisation: reqWithUser.user._id
             });
+            
+
             if(existingConfig){
-                response.status(200).send({
-                    message:"Same config already exists"
-                });
-                return;
+                const existingConfigClone = cloneDeep(existingConfig).toObject();
+                ["_id", "organisation","__v"].forEach((prop)=>delete existingConfigClone[prop]);
+                if(isObjectEqual(existingConfigClone,reqData)){
+                    response.status(200).send({
+                        message:"Same config already exists"
+                    });
+                    return;    
+                }
             }
             const createdConfig = new this.config({
                 ...reqData,
                 organisation: reqWithUser.user._id
             });
-            console.log("created config:: ",createdConfig);
             createdConfig.save().then(config=>{
                 response.status(200).send(config);
             })

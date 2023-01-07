@@ -10,23 +10,23 @@ class config{
 
 class CreateTaskConfigDTO{
 
-    @Type(()=> config)
+    // @Type(()=> config)
     @ValidateNested()
     public name!:config
 
-    @Type(()=> config)
+    // @Type(()=> config)
     @ValidateNested()
     public status!:config
 
-    @Type(()=> config)
+    // @Type(()=> config)
     @ValidateNested()
     public label!:config
 
-    @Type(()=> config)
+    // @Type(()=> config)
     @ValidateNested()
     public description!:config
 
-    @Type(()=> config)
+    // @Type(()=> config)
     @ValidateNested()
     public assignee!:config
 
