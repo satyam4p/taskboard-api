@@ -29,6 +29,7 @@ class AuthController{
         this.router.post(`${this.path}/logoutAll`, authMiddleware, validationMiddleware(LogInDto), this.logoutUserFromAllSessions);
         this.router.get(`${this.path}/refresh`, this.refreshToken);
         this.router.get(`${this.path}/me`, authMiddleware, validationMiddleware(LogInDto), this.getUser);
+        this.router.get(`${this.path}/users`, authMiddleware, validationMiddleware(LogInDto), this.getUsersList);
     }
 
     registerUser = async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
@@ -145,6 +146,23 @@ class AuthController{
         }else{
             response.send({'message':'user not found'}).sendStatus(404);
         }
+    }
+
+    getUsersList= async ( request : express.Request, response: express.Response)=>{
+        try{
+            let allUsers = await this.user.find({});
+            console.log("allUsers:: ",allUsers);
+            const allUserNames = allUsers.map(user=>{
+                return {
+                    username: user.username,
+                    id: user._id
+                }
+            });
+            response.status(200).send(allUserNames);
+        }catch(error){
+            console.log("error occured while fetching all users:: ",error);
+        }
+        
     }
 }
 
