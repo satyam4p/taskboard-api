@@ -6,6 +6,7 @@ class config{
     entityKey!: string
     label!: string
     visible!: string
+    icon!: string
 }
 
 class CreateTaskConfigDTO{

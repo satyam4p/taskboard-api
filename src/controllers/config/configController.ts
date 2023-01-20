@@ -67,7 +67,7 @@ class ConfigController {
     getTaskConfig= async (request: express.Request, response:express.Response)=>{
         try{
             const reqId = request.params.id;
-        const requestedConfig = await this.config.findOne({
+            const requestedConfig = await this.config.findOne({
             organisation: reqId
         });
         response.status(200).send(requestedConfig);
