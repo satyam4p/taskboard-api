@@ -37,7 +37,6 @@ class ConfigController {
                 organisation: reqWithUser.user._id
             });
             
-
             if(existingConfig){
                 const existingConfigClone = cloneDeep(existingConfig).toObject();
                 ["_id", "organisation","__v"].forEach((prop)=>delete existingConfigClone[prop]);
@@ -68,9 +67,13 @@ class ConfigController {
         try{
             const reqId = request.params.id;
             const requestedConfig = await this.config.findOne({
-            organisation: reqId
-        });
-        response.status(200).send(requestedConfig);
+                    organisation: reqId
+                });
+            if(requestedConfig){
+                const configClone = cloneDeep(requestedConfig).toObject();
+                ["_id", "organisation","__v"].forEach((prop)=>delete configClone[prop]);
+                response.status(200).send(configClone);
+            }
         }catch(error){
             console.log(`error occured whilefeching config for org ${request.params.id}`);
             response.status(404).send("Config does not exisits");

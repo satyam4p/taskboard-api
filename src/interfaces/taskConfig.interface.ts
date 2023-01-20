@@ -32,7 +32,7 @@ interface taskConfigInterface{
         viible: boolean,
         icon: string
     },
-    organisation?: string
+    organisation?: string| undefined
 }
 
 export default taskConfigInterface;
