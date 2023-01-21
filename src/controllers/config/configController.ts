@@ -84,16 +84,15 @@ class ConfigController {
         console.log("req received");
         const reqId = request.params.id;
         const reqData = request.body;
+
         try{
             const reqWUser = request as RequestWithUser;
             const existingConfig = await this.config.findOne({
-                organisation: reqWUser.user._id
+                organisation: reqId
             });
+            
             if(existingConfig){
-                const res = await this.config.updateOne({
-                    ...reqData
-                });
-                console.log("res:: ",res);
+                const res = await this.config.updateOne({organisation: reqId}, reqData);
                 if(res){
                     response.status(200).send({
                         message:"config updated successfully"
