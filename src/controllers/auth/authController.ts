@@ -32,23 +32,32 @@ class AuthController{
         this.router.get(`${this.path}/users`, authMiddleware, validationMiddleware(LogInDto), this.getUsersList);
     }
 
-    registerUser = async(request: express.Request, response: express.Response, next: express.NextFunction)=>{
+    registerUser = async (request: express.Request, response: express.Response, next: express.NextFunction)=>{
 
         const userData = request.body;
-        if(await this.user.findOne({email: userData.email})){
-            /** exception for same email sent in request of registration */
-            next(new UserWithSameEmailAreadyExisitsException(userData.email));
-        }else{
-            const hashedPassword = await bcrypt.hash(userData.password, 10);
-            const user = await this.user.create({
-                ...userData,
-                password: hashedPassword
+        try{
+            if(await this.user.findOne({email: userData.email})){
+                /** exception for same email sent in request of registration */
+                next(new UserWithSameEmailAreadyExisitsException(userData.email));
+            }else{
+                const hashedPassword = await bcrypt.hash(userData.password, 10);
+                const user = await this.user.create({
+                    ...userData,
+                    password: hashedPassword
+                });
+                const token = await user.generateAuthToken();
+                user.password = undefined;
+                user.tokens = undefined;
+                response.send({user,token});
+            };
+        }catch(error){
+            console.log("some error occured while registering user:: ",error);
+            response.send({
+                message: "error occured while registering user",
+                error: error
             });
-            const token = await user.generateAuthToken();
-            user.password = undefined;
-            user.tokens = undefined;
-            response.send({user,token});
-        };
+        }
+        
     }
 
     loginUser= async (request: express.Request, response: express.Response, next: express.NextFunction)=>{
@@ -151,7 +160,6 @@ class AuthController{
     getUsersList= async ( request : express.Request, response: express.Response)=>{
         try{
             let allUsers = await this.user.find({});
-            console.log("allUsers:: ",allUsers);
             const allUserNames = allUsers.map(user=>{
                 return {
                     username: user.username,
