@@ -8,5 +8,6 @@ export interface comments extends mongoose.Document{
         username: string,
         userId: string
     },
+    taskId: string
 
 }

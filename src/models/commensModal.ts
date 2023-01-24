@@ -6,8 +6,10 @@ const commentsSchema = new Schema({
     user: {
         username: { type: String, required: true },
         userId: { type: mongoose.Schema.Types.ObjectId,
-            ref:'User' , required: true}
-    }
+            ref:'User' , required: true},
+    },
+    taskId: { type: mongoose.Schema.Types.ObjectId,
+        ref:'Task' , required: true},
 })
 
 const commentsModal = mongoose.model< comments & mongoose.Document>('Comments', commentsSchema );

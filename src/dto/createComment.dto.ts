@@ -16,6 +16,9 @@ class createComment{
     @ValidateNested()
     @IsNotEmptyObject()
     public user!: user
+
+    @IsString()
+    taskId!: String
 }
 
 export default createComment;
