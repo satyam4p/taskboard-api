@@ -20,6 +20,7 @@ class CommentsController{
     initializeRoutes = () =>{
         this.router.all(`${this.path}/*`,authMiddleware)
         .post(`${this.path}/create`, validationMiddleware(createComment), this.postComment)
+        .get(`${this.path}/:id`, this.getTaskComments)
     }
     /**
      * @function postComment
@@ -52,6 +53,15 @@ class CommentsController{
                 error: error
             });
         }
+    }
+
+    getTaskComments = (request : express.Request, response: express.Response) => {
+
+        const taskId = request.params.id;
+        console.log("id:: ",taskId);
+
+
+
     }
 
 }
