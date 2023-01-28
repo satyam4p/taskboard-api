@@ -77,9 +77,16 @@ class taskController{
                 {...request.body}
             );
             if(queryResponse){
-                response.status(200).send({
-                    message:"task updated successfuly"
-                })
+                this.task.findById(id, (_error: any, _result: any)=>{
+                    if(_error){
+                        response.status(402).send({
+                            message:"some error occured while getting updated task"
+                        });
+                    }else{
+                        console.log("resut:: ",_result);
+                        response.status(200).send(_result);
+                    }   
+                });
             }else{
                 next(new HttpException(404,"Task not found"));    
             }
