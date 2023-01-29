@@ -10,6 +10,7 @@ const commentsSchema = new Schema({
     },
     taskId: { type: mongoose.Schema.Types.ObjectId,
         ref:'Task' , required: true},
+    postedAt: {type: Date, default: Date.now}
 })
 
 const commentsModal = mongoose.model< comments & mongoose.Document>('Comments', commentsSchema );
