@@ -39,12 +39,13 @@ class CommentsController{
                         message:"some error occured while posting comment",
                         error: error
                     })
+                } else{
+                    console.log("comment:: ",comment);
+                    response.send({
+                        comment,
+                        message: "comment posted successfully"
+                    });
                 }
-                console.log("comment:: ",comment);
-                response.status(200).send({
-                    comment,
-                    message: "comment posted successfully"
-                });
             });
         }catch (error){
             console.log("some error occured while posting comment", error);
