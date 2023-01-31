@@ -59,10 +59,28 @@ class CommentsController{
     getTaskComments = (request : express.Request, response: express.Response) => {
 
         const taskId = request.params.id;
-        console.log("id:: ",taskId);
 
+        try{
+            this.comments.find({
+                taskId
+            },(error: any, comments: any)=>{
+                if(error){
+                    response.status(400).send({
+                        message: "task does not exisits",
+                        error
+                    })
+                }else{
 
+                    response.status(200).send(comments);
 
+                }
+            })
+        }catch(error){
+            response.status(400).send({
+                mesage: "an error occured while fetching comments",
+                error
+            });
+        }
     }
 
 }
