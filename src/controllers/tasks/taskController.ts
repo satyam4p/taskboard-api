@@ -20,14 +20,15 @@ class taskController{
     public initializeRoutes(){
         
         /** creating a get request path and collback function for it */
-        this.router.get(this.path, this.getAllTasks);
         /**adding validationmiddleware to validate the  incoming create request with dto class */
         // this.router.post(`${this.path}/create`, validationMiddleware(CreateTaskDto), this.createTask);
         //need to create dto class for following routes
         this.router.all(`${this.path}/*`,authMiddleware)
         .patch(`${this.path}/updateStatus/:id`, validationMiddleware(CreateTaskDto), this.updateTaskStatus)
         .delete("/tasks/delete/:id", this.deleteTask)
-        .post(`${this.path}/create`, authMiddleware, validationMiddleware(CreateTaskDto), this.createTask);
+        .post(`${this.path}/create`, authMiddleware, validationMiddleware(CreateTaskDto), this.createTask)
+        .get(this.path, this.getAllTasks)
+        .get(`${this.path}/recent`,this.getRecentTasks)
         // this.router.patch(`${this.path}/updateStatus/:id`, validationMiddleware(CreateTaskDto), this.updateTaskStatus);
         // this.router.delete("/tasks/delete/:id", this.deleteTask);
     }
@@ -107,6 +108,25 @@ class taskController{
         }else{
             next(new HttpException(400, 'Some error occured'));
         }
+    }
+
+    getRecentTasks = (request: express.Request, response: express.Response) =>{
+
+        const requestWUser = request as RequestWithUser;
+
+        const assignee = requestWUser.user._id;
+        const assignedTasks = this.task.find({
+            assignee
+        }, (error: any, tasks: Array<task>)=>{
+            if(error){
+                response.status(500).send({
+                    message:"some error occured while fetching tasks"
+                });
+            }else{
+                /**@todo create q query to sort the tasks by craeted time and reduce the count of records to  10*/
+                response.status(200).send(tasks);
+            }
+        });
     }
 }
 
