@@ -11,7 +11,8 @@ const taskSchema= new mongoose.Schema({
     "description": {type: String, required: true},
     "assignee": {type: mongoose.Schema.Types.ObjectId,
             ref:'User'},
-    "label": {type: String}
+    "label": {type: String},
+    "createdAt":{type: Date, default: Date.now}
 });
 
 const taskModel = mongoose.model<task & mongoose.Document>('Task',taskSchema);
