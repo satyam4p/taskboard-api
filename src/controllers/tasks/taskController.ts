@@ -117,16 +117,17 @@ class taskController{
         const assignee = requestWUser.user._id;
         const assignedTasks = this.task.find({
             assignee
-        }, (error: any, tasks: Array<task>)=>{
+        })
+        .limit(10).sort({createdAt: -1})
+        .exec((error: any, tasks: Array<task>)=>{
             if(error){
                 response.status(500).send({
                     message:"some error occured while fetching tasks"
                 });
             }else{
-                /**@todo create q query to sort the tasks by craeted time and reduce the count of records to  10*/
                 response.status(200).send(tasks);
             }
-        });
+        })
     }
 }
 
