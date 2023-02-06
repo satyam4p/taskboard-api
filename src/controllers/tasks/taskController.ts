@@ -29,6 +29,7 @@ class taskController{
         .post(`${this.path}/create`, authMiddleware, validationMiddleware(CreateTaskDto), this.createTask)
         .get(this.path, this.getAllTasks)
         .get(`${this.path}/recent`,this.getRecentTasks)
+        .get(`${this.path}/:id`, this.getTask)
         // this.router.patch(`${this.path}/updateStatus/:id`, validationMiddleware(CreateTaskDto), this.updateTaskStatus);
         // this.router.delete("/tasks/delete/:id", this.deleteTask);
     }
@@ -54,6 +55,26 @@ class taskController{
             console.log("Error in creating task:: ",error);
             response.status(401).send("Some Error Occurred");
         };
+    }
+
+    getTask = (request: express.Request, response: express.Response, next: express.NextFunction)=>{
+        try{
+            const taskId = request.params.id;
+            this.task.findById({
+                _id: taskId
+            }, (error: any, task: task)=>{
+                if(error){
+                    response.status(404).send({
+                        message: "task not found",
+                        error
+                    })
+                }else{
+                    response.status(200).send(task);
+                }
+            })
+        }catch(error){
+            next(new HttpException(401,"Something went wrong"));
+        }
     }
 
     getAllTasks=(request: express.Request, response: express.Response)=>{
