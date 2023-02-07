@@ -66,7 +66,7 @@ class CommentsController{
             },(error: any, comments: any)=>{
                 if(error){
                     response.status(400).send({
-                        message: "task does not exisits",
+                        message: "task does not exists",
                         error
                     })
                 }else{
