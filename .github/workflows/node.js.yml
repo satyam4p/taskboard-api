@@ -33,11 +33,23 @@ jobs:
 #     for now avoiding tasts
 #     - run: npm test
 #     deploy the application to netlify
-    - name: Deploy production to Netlify
-      uses: South-Paw/action-netlify-deploy@v1.2.0
+#     - name: Deploy production to Netlify
+#       uses: South-Paw/action-netlify-deploy@v1.2.0
+#       with:
+#         github-token: ${{ secrets.GITHUB_TOKEN }}
+#         netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#         netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+#         build-dir: './build'
+#         comment-on-commit: true
+        
+#   deploy to render
+    - name: Build and Deploy
+      uses: render-inc/action-deploy@v1
       with:
+        render-token: ${{ secrets.RENDER_TOKEN }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-        build-dir: './build'
-        comment-on-commit: true
+        build-command: npm run build
+        start-command: node ./build/server.js
+        branch: main
+        name: taskboar-app
+        region: us-west
