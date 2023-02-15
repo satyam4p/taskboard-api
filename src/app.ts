@@ -36,7 +36,7 @@ class App{
     }
 
     public listen(){
-        this.app.listen(process.env.PORT,()=>`App is listening at port ${process.env.PORT}`);
+        this.app.listen(process.env.PORT,(()=>console.log(`App is listening at port ${process.env.PORT}`)));
     }
 
     private connectToDatabase(){
