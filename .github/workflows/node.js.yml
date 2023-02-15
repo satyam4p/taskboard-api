@@ -46,10 +46,11 @@ jobs:
     - name: Build and Deploy
       uses: bounceapp/render-action@0.6.0
       with:
+        service-id: ${{ secrets.RENDER_SERVICE_ID }}
         render-token: ${{ secrets.RENDER_TOKEN }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        build-command: npm run build
-        start-command: node ./build/server.js
+        sleep: 30000
+        retries: 20
+        wait: 16000
         branch: main
-        name: taskboar-app
         region: us-west
