@@ -44,7 +44,7 @@ jobs:
         
 #   deploy to render
     - name: Build and Deploy
-      uses: renderhq/github-action@1.4.0
+      uses: bounceapp/render-action@0.6.0
       with:
         render-token: ${{ secrets.RENDER_TOKEN }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
