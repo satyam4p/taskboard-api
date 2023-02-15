@@ -44,7 +44,7 @@ jobs:
         
 #   deploy to render
     - name: Build and Deploy
-      uses: render-inc/action-deploy@v1
+      uses: renderhq/github-action@1.4.0
       with:
         render-token: ${{ secrets.RENDER_TOKEN }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
