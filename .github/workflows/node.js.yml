@@ -52,5 +52,3 @@ jobs:
         sleep: 30000
         retries: 20
         wait: 16000
-        branch: main
-        region: us-west
