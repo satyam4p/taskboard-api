@@ -5,6 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "start": "nodemon ./src/server.ts",
+    "build": "rimraf ./build && tsc",
     "test": "jest"
   },
   "author": "",
@@ -28,7 +29,8 @@
     "mongoose": "^6.5.3",
     "react-router": "^6.4.2",
     "react-router-dom": "^6.4.2",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^4.1.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

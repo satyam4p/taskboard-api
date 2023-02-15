@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import configModal from "../../models/configModal";
 import authMiddleware from "../../middleware/auth.middleware";
-import validationMiddleware from "../../middleware/Validation.middleware";
+import validationMiddleware from "../../middleware/validation.middleware";
 import CreateTaskConfigDTO from "../../dto/createTaskConfig.dto";
 import RequestWithUser from "../../interfaces/requestWithUser.interface";
 import { isObjectEqual } from "../../utils/isEquals";

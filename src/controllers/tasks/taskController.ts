@@ -2,7 +2,7 @@ import * as express from 'express';
 import task from '../../interfaces/tasks.interface';
 import taskModel from '../../models/taskModel';
 import HttpException from '../../exceptions/HttpExceptions';
-import validationMiddleware from '../../middleware/Validation.middleware';
+import validationMiddleware from '../../middleware/validation.middleware';
 import CreateTaskDto from '../../dto/CreateTask.dto';
 import authMiddleware from '../../middleware/auth.middleware';
 import RequestWithUser from '../../interfaces/requestWithUser.interface';

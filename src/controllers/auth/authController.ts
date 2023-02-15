@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 import userModel from "../../models/user.model";
 import UserWithSameEmailAreadyExisitsException from "../../exceptions/UserAlreadyExistsWithSameEmailException";
 import WrongCredentialsExceptioon from "../../exceptions/WrongCredentialsExceptioon";
-import validationMiddleware from "../../middleware/Validation.middleware";
+import validationMiddleware from "../../middleware/validation.middleware";
 import UserDto from "../../dto/CreatUser.dto";
 import LogInDto from "../../dto/login.dto";
 import { User } from "../../interfaces/user.interface";

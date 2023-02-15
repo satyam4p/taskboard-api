@@ -1,6 +1,6 @@
 import * as express from "express"
 import authMiddleware from '../../middleware/auth.middleware';
-import validationMiddleware from "../../middleware/Validation.middleware";
+import validationMiddleware from "../../middleware/validation.middleware";
 import taskModel from "../../models/taskModel";
 import userModel from "../../models/user.model";
 

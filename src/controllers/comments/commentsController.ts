@@ -1,7 +1,7 @@
 import * as express from 'express';
 import commentsModal from '../../models/commensModal';
 import authMiddleware from '../../middleware/auth.middleware';
-import validationMiddleware from '../../middleware/Validation.middleware';
+import validationMiddleware from '../../middleware/validation.middleware';
 import { cloneDeep } from "lodash";
 import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import createComment from '../../dto/createComment.dto';
