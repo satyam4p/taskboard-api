@@ -25,7 +25,7 @@ class taskController{
         //need to create dto class for following routes
         this.router.all(`${this.path}/*`,authMiddleware)
         .patch(`${this.path}/updateStatus/:id`, validationMiddleware(CreateTaskDto), this.updateTaskStatus)
-        .delete("/tasks/delete/:id", this.deleteTask)
+        .delete("/tasks/delete/:id",authMiddleware, this.deleteTask)
         .post(`${this.path}/create`, authMiddleware, validationMiddleware(CreateTaskDto), this.createTask)
         .get(this.path, this.getAllTasks)
         .get(`${this.path}/recent`,this.getRecentTasks)
