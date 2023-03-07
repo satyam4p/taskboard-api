@@ -139,7 +139,7 @@ class taskController{
         const assignedTasks = this.task.find({
             assignee
         })
-        .limit(10).sort({createdAt: -1})
+        .limit(20).sort({createdAt: -1})
         .exec((error: any, tasks: Array<task>)=>{
             if(error){
                 response.status(500).send({
