@@ -93,11 +93,9 @@ class taskController{
             )
             if(tasks){
                 tasks.reduce((acc, task)=>{
-                    console.log("acc:: ",acc);
                     task['assignee'] = task?.username[0]?.username;
                     delete task.username;
                     acc.push(task);
-                    console.log("task:: ",task);
                     return acc;
                 },[]);
                 response.status(200).send(tasks);
