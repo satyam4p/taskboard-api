@@ -77,13 +77,34 @@ class taskController{
         }
     }
 
-    getAllTasks=(request: express.Request, response: express.Response)=>{
+    getAllTasks= async (request: express.Request, response: express.Response)=>{
         try{
-            this.task.find().then(tasks=>{
+            const tasks = await this.task.aggregate(
+                [
+                    {
+                        $lookup:{
+                            from: 'users',
+                            localField: 'assignee',
+                            foreignField: '_id',
+                            as: 'username'
+                        }
+                    }
+                ]
+            )
+            if(tasks){
+                tasks.reduce((acc, task)=>{
+                    console.log("acc:: ",acc);
+                    task['assignee'] = task?.username[0]?.username;
+                    delete task.username;
+                    acc.push(task);
+                    console.log("task:: ",task);
+                    return acc;
+                },[]);
                 response.status(200).send(tasks);
-            });
+            }
+
         }catch(error){
-            response.status(401).send({
+            response.status(500).send({
                 "message":"Some error occured"
             })
         }
