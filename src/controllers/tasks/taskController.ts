@@ -132,7 +132,7 @@ class taskController{
                 next(new HttpException(404,"Task not found"));    
             }
         }catch(error){
-            next(new HttpException(401,"Something went wrong"));
+            next(new HttpException(500,"Something went wrong"));
         }
     }
     
