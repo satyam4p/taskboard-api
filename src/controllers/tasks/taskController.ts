@@ -110,7 +110,6 @@ class taskController{
 
     updateTaskStatus = async (request: express.Request, response:express.Response, next:express.NextFunction) =>{
         try{
-            console.log("request reeived:: ",request.body);
             const id = request.params.id;
             let queryResponse = await this.task.findByIdAndUpdate({
                 _id: id
