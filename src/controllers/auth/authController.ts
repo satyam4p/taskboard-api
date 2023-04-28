@@ -63,38 +63,47 @@ class AuthController{
     loginUser= async (request: express.Request, response: express.Response, next: express.NextFunction)=>{
 
         const loginData: LogInDto = request.body;
+        try{
+            const user = await this.user.findOne({email: loginData.email});
 
-        const user = await this.user.findOne({email: loginData.email});
-
-        if(user){
-            const isPasswordMatching = await bcrypt.compare(
-                loginData.password.toString(),
-                user.get('password', null, { getters: false })
-            )
-            if(isPasswordMatching){
-                const token = await user.generateAuthToken();
-                const refreshToken = jwt.sign({
-                    email: user.email
-                },
-                process.env.REFRESH_TOKEN_SECRET as string,
-                { expiresIn:  60 * 60 }
-                );
-                user.password = undefined;
-                user.tokens = undefined;
-                response.cookie('jwt',refreshToken,
-                {
-                    httpOnly: true,//accessible only on web server
-                    secure: true, //for https
-                    sameSite:'none',//cross-site cookie
-                    maxAge: 60 * 60 * 1000//cookie expiry set to 1hr
-                });
-                response.status(200).send({user, token});
+            if(user){
+                const isPasswordMatching = await bcrypt.compare(
+                    loginData.password.toString(),
+                    user.get('password', null, { getters: false })
+                )
+                if(isPasswordMatching){
+                    const token = await user.generateAuthToken();
+                    const refreshToken = jwt.sign({
+                        email: user.email
+                    },
+                    process.env.REFRESH_TOKEN_SECRET as string,
+                    { expiresIn:  60 * 60 }
+                    );
+                    user.password = undefined;
+                    user.tokens = undefined;
+                    response.cookie('jwt',refreshToken,
+                    {
+                        httpOnly: true,//accessible only on web server
+                        secure: true, //for https
+                        sameSite:'none',//cross-site cookie
+                        maxAge: 60 * 60 * 1000//cookie expiry set to 1hr
+                    });
+                    response.status(200).send({user, token});
+                }else{
+                    next( new WrongCredentialsExceptioon());
+                }
             }else{
-                next( new WrongCredentialsExceptioon());
+                next(new WrongCredentialsExceptioon());
             }
-        }else{
-            next(new WrongCredentialsExceptioon());
+        }catch(error){
+            console.log("error occured while login: ",error);
+            response.status(500).send({
+                message:'an error occured while login',
+                error
+            })
         }
+
+        
     }
 
     logoutUser= async (request: express.Request, response: express.Response)=>{
