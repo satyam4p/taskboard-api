@@ -9,7 +9,8 @@ export interface User extends mongoose.Document{
         {
             token: string
         }
-    ] | []
+    ] | [],
+    role?: string
 }
 
 export interface UserMethods{
