@@ -16,7 +16,7 @@ const app =  new App(
         new AuthController(),
         new ConfigController(),
         new CommentsController(),
-        new ChoicesController()
+        new ChoicesController(),
     ]
 )
 
