@@ -6,7 +6,7 @@ import validationMiddleware from '../../middleware/validation.middleware';
 import CreateTaskDto from '../../dto/CreateTask.dto';
 import authMiddleware from '../../middleware/auth.middleware';
 import RequestWithUser from '../../interfaces/requestWithUser.interface';
-
+import getAWSCreds from '../profile/userProfile';
 class taskController{
 
     public path = "/tasks";
@@ -79,6 +79,7 @@ class taskController{
 
     getAllTasks= async (request: express.Request, response: express.Response)=>{
         try{
+            getAWSCreds();
             const tasks = await this.task.aggregate(
                 [
                     {
