@@ -155,14 +155,16 @@ class AuthController{
             }
         );
     }
-    getUser= async (request:express.Request, response:express.Response)=>{
+    public getUser= async (request:express.Request, response:express.Response)=>{
         const { user } = request as RequestWithUser;
+        console.log("request:: ",request);
+        console.log("user:: ",user);
         if(user){
             user.password = undefined;
             user.tokens = undefined;
             response.send(user);
         }else{
-            response.send({'message':'user not found'}).sendStatus(404);
+            response.status(404).send({'message':'user not found'});
         }
     }
 

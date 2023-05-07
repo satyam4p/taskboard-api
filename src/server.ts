@@ -6,6 +6,7 @@ import CommentsController from './controllers/comments/commentsController';
 import 'dotenv/config';
 import validateEnv from './utils/validateEnv';
 import ChoicesController from './controllers/choices/ChoicesController';
+import UserProfile from './controllers/profile/userProfile';
 
 const { MONGO_USER, MONGO_PASSWORD, PORT, MONGO_PATH } = process.env;
 
@@ -17,6 +18,7 @@ const app =  new App(
         new ConfigController(),
         new CommentsController(),
         new ChoicesController(),
+        new UserProfile()
     ]
 )
 

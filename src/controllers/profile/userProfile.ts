@@ -1,12 +1,56 @@
 import aws from 'aws-sdk';
+import userModel from '../../models/user.model';
+import validationMiddleware from "../../middleware/validation.middleware";
+import { User } from "../../interfaces/user.interface";
+import express from 'express';
+import RequestWithUser from '../../interfaces/requestWithUser.interface';
+import authMiddleware from '../../middleware/auth.middleware';
+import { cloneDeep, result } from 'lodash';
 
-const getAWSCreds = () =>{
 
-    aws.config.getCredentials((err)=>{
-        if(err){
-            console.log("an error occured while accessing S3:: ",err);
+class UserProfile {
+
+    public router = express.Router();
+    public path = '/profile';
+    private user = userModel;
+
+    constructor(){
+
+        this.initializeRoutes();
+
+    }
+
+    initializeRoutes = ()=>{
+
+        this.router.get(`${this.path}`,authMiddleware, this.getUserProfile)
+
+    }
+
+    getUserProfile = async (request: express.Request, response: express.Response, next: express.NextFunction) =>{
+        let { user } = request as RequestWithUser;
+        if(user){
+            user.password = undefined;
+            user.tokens = undefined;
+            const profileKey = user.username.toLowerCase() +'.jpg';
+            const profileUrl = await getProfile(profileKey);
+            const userProfile = {
+                user,
+                profile: profileUrl
+            }
+            
+            response.status(200).send(userProfile);
+        }else{
+            response.status(404).send({
+                message:'user not found'
+            });    
         }
 
+    }
+
+}
+
+export const getProfile = async ( profileKey : any ) =>{
+    try{
         const s3 = new aws.S3({apiVersion:'2023-04-01.1', signatureVersion:'v4', region:'ap-south-1'});
         s3.listBuckets((err, data)=>{
             if(err){
@@ -28,14 +72,19 @@ const getAWSCreds = () =>{
         })
         const params = {
             Bucket: 'taskboard',
-            Key:'satyam.jpg'
+            Key: profileKey 
         }
         
         const objectPromise = s3.getSignedUrlPromise('getObject', params);
-        objectPromise.then((url=>{
-            console.log("url for image is:: ",url);
-        }))
-    })
+        const url = await objectPromise.then((url=>{
+            return url
+        }));
+        return url;
+    }catch(error){
+        console.log("error occured while fetching profile:: ",error);
+        return "error occured while fetching profile";
+    }
 
 }
-export default getAWSCreds;
+
+export default UserProfile;
