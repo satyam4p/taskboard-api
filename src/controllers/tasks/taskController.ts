@@ -6,13 +6,16 @@ import validationMiddleware from '../../middleware/validation.middleware';
 import CreateTaskDto from '../../dto/CreateTask.dto';
 import authMiddleware from '../../middleware/auth.middleware';
 import RequestWithUser from '../../interfaces/requestWithUser.interface';
+import userModel from '../../models/user.model';
+import nodemailer from 'nodemailer';
+import { prependOnceListener } from 'process';
 // import getAWSCreds from '../profile/userProfile';
 class taskController{
 
     public path = "/tasks";
     public router = express.Router();
     private task =  taskModel;
-
+    private user = userModel;
     constructor(){
         this.initializeRoutes();
     }
@@ -34,7 +37,7 @@ class taskController{
         // this.router.delete("/tasks/delete/:id", this.deleteTask);
     }
 
-    createTask=(request: express.Request, response: express.Response)=>{
+    createTask= (request: express.Request, response: express.Response)=>{
         try{
 
             const reqData = request.body;
@@ -43,8 +46,35 @@ class taskController{
                 ...reqData,
                 ownerId: requestUser.user._id
             });
-            createdTask.save().then(task=>{
-            response.send(task);
+            createdTask.save().then(async task=>{
+                const assignee = await this.user.findById({
+                    _id: reqData.assignee
+                });
+                if(assignee){
+                    const transporter = nodemailer.createTransport({
+                        host: 'smtp.ethereal.email',
+                        port: 587,
+                        auth: {
+                            user: 'teagan.brown4@ethereal.email',
+                            pass: 'wgFHvXWAcFd323A47K'
+                        }
+                    });
+                    let mailOptions = {
+                        from:'<teagan.brown4@ethereal.email>',
+                        to:'satyamkumar343@gmail.com',
+                        subject:'taskboard testing',
+                        text:'confirmation email'
+                    };
+                    transporter.sendMail(mailOptions,(error, info)=>{
+
+                        if(error){
+                            console.log("error:: ",error);
+                        }else{
+                            console.log("response:: ",info);
+                        }
+                    })
+                }
+                response.send(task);
         }).catch(error=>{
             response.status(400).send({
                 "message":"Error occured",
