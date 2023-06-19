@@ -8,7 +8,7 @@ import authMiddleware from '../../middleware/auth.middleware';
 import RequestWithUser from '../../interfaces/requestWithUser.interface';
 import userModel from '../../models/user.model';
 import nodemailer from 'nodemailer';
-import { prependOnceListener } from 'process';
+import { SendEmail } from '../../helperServices/GenerateEmail';
 // import getAWSCreds from '../profile/userProfile';
 class taskController{
 
@@ -65,14 +65,7 @@ class taskController{
                         subject:'taskboard testing',
                         text:'confirmation email'
                     };
-                    transporter.sendMail(mailOptions,(error, info)=>{
-
-                        if(error){
-                            console.log("error:: ",error);
-                        }else{
-                            console.log("response:: ",info);
-                        }
-                    })
+                    
                 }
                 response.send(task);
         }).catch(error=>{
