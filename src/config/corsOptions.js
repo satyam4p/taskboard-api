@@ -6,7 +6,6 @@ export const corsOptions = {
             console.log("origin found");
             callback(null, true);
         }else{
-            console.log("origin found");
             callback(new Error('Not allowed by CORS'));
         }
     },
