@@ -52,7 +52,7 @@ class AuthController{
             };
         }catch(error){
             console.log("some error occured while registering user:: ",error);
-            response.send({
+            response.status(400).send({
                 message: "error occured while registering user",
                 error: error
             });
