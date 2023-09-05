@@ -11,12 +11,14 @@ import * as jwt from 'jsonwebtoken';
 import DataStoreInToken from "../../interfaces/dataStoredInToken.interface";
 import authMiddleware from "../../middleware/auth.middleware";
 import RequestWithUser from "../../interfaces/requestWithUser.interface";
+import blacklistedModal from "../../models/blacklisted.Modal";
 
 class AuthController{
     
     public path = "/auth";
     public router = express.Router(); 
     private user = userModel;
+    private blacklisted = blacklistedModal;
 
     constructor(){
         this.initializeRoutes();
@@ -109,6 +111,15 @@ class AuthController{
     logoutUser= async (request: express.Request, response: express.Response)=>{
         
         const requestWithUser = request as RequestWithUser;
+        
+        let token = requestWithUser.cookies?.jwt;
+        if(token){
+            let blacklistedToken = new this.blacklisted({
+                token
+            })
+            
+            await blacklistedToken.save();
+        }
         const user = requestWithUser.user;
         const result = user.tokens?.filter(token=>token.token !== requestWithUser.token);
         user.tokens = result as User["tokens"];
@@ -118,6 +129,14 @@ class AuthController{
 
     logoutUserFromAllSessions= async (request: express.Request, response: express.Response)=>{
         const requestWithUser = request as RequestWithUser;
+        
+        let token = requestWithUser.cookies?.jwt;
+        if(token){
+            let blacklistedToken = new this.blacklisted({
+                token
+            })
+            await blacklistedToken.save();
+        }
         const user = requestWithUser.user;
         user.tokens = [];
         await user.save();
@@ -128,33 +147,53 @@ class AuthController{
 
         const cookies = request.cookies;
         if(!cookies?.jwt) return response.status(401).send({message: 'Unauthorized'});
-
+        
         const refreshToken = cookies.jwt;
-        jwt.verify(
-            refreshToken,
-            process.env.REFRESH_TOKEN_SECRET as string,
-            async (err:any, decoded:any)=>{
-
-                if(err) return response.status(403).send({message:'forbidden'});
-
-                const foundUser = await this.user.findOne({
-                    email: decoded?.email
-                });
-
-                if(!foundUser) return response.status(401).send({message:'Unauthorized'});
-
-                const dataStoredInToken: DataStoreInToken = {
-                    _id: foundUser._id
-                };
-                
-                const expiresIn = 60 * 60;
-                const token = await foundUser.generateAuthToken();
-                foundUser.tokens = undefined;
-                foundUser.password = undefined;
-                response.send({ user: foundUser, token });
-            }
-        );
+        let isBlacklisted = await this.isTokenBlacklisted(refreshToken);
+        
+        if(isBlacklisted){
+            response.status(403).send({message:'forbidden'});
+        }else{
+            jwt.verify(
+                refreshToken,
+                process.env.REFRESH_TOKEN_SECRET as string,
+                async (err:any, decoded:any)=>{
+    
+                    if(err) return response.status(403).send({message:'forbidden'});
+    
+                    const foundUser = await this.user.findOne({
+                        email: decoded?.email
+                    });
+    
+                    if(!foundUser) return response.status(401).send({message:'Unauthorized'});
+    
+                    const dataStoredInToken: DataStoreInToken = {
+                        _id: foundUser._id
+                    };
+                    
+                    const expiresIn = 60 * 60;
+                    const token = await foundUser.generateAuthToken();
+                    foundUser.tokens = undefined;
+                    foundUser.password = undefined;
+                    response.send({ user: foundUser, token });
+                }
+            );
+        }
     }
+
+    private isTokenBlacklisted = async (token: string) : Promise<boolean> =>{
+
+        let blackListedToken = await this.blacklisted.findOne({
+            token
+        })
+
+        if(blackListedToken){
+            return true
+        }
+        return false
+
+    }
+
     public getUser= async (request:express.Request, response:express.Response)=>{
         const { user } = request as RequestWithUser;
         console.log("request:: ",request);
