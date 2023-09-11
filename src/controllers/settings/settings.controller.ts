@@ -18,8 +18,11 @@ class SettingsController {
 
         this.router.all(`${this.path}/*`, authMiddleware)
         .get(`${this.path}/config/:id`, authMiddleware, this.getSettingsConfig)
+        .get(`${this.path}/list`, authMiddleware, this.getSettingsList)
 
     }
+
+
 
     getSettingsConfig = (request: express.Request, response: express.Response)=>{
 
@@ -31,6 +34,15 @@ class SettingsController {
 
         }
 
+    }
+
+    getSettingsList=(request: express.Request, response: express.Response )=>{
+
+        const reqWithUser = request as RequestWithUser;
+        // console.log("reqWUser:: ",reqWithUser);
+        response.status(200).send({
+            message: "OK",
+        })
     }
 
 }
