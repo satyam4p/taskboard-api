@@ -9,9 +9,7 @@ class SettingsController {
     public router = Router();
 
     constructor(){
-
         this.initializeRoutes();
-
     }
 
     initializeRoutes = () =>{
@@ -31,7 +29,6 @@ class SettingsController {
         if(user){
             const loggedInUser = requestWUser.user._id;
             const matched = user === loggedInUser;
-
         }
 
     }
@@ -39,10 +36,13 @@ class SettingsController {
     getSettingsList=(request: express.Request, response: express.Response )=>{
 
         const reqWithUser = request as RequestWithUser;
-        // console.log("reqWUser:: ",reqWithUser);
-        response.status(200).send({
-            message: "OK",
-        })
+        let data = [{
+            task_config: true,
+        },
+        {
+            profile_settings: true
+        }]
+        response.status(200).send(data)
     }
 
 }
