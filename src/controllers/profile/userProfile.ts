@@ -33,20 +33,24 @@ class UserProfile {
             user.tokens = undefined;
             const profileKey = user.username.toLowerCase() +'.jpg';
             const profileUrl = await getProfile(profileKey);
-            const userProfile = {
-                user,
-                profile: profileUrl
+            if(profileUrl){
+                const userProfile = {
+                    user,
+                    profile: profileUrl
+                }
+                response.status(200).send(userProfile);
+                return;
             }
-            
-            response.status(200).send(userProfile);
+            response.status(200).send({
+                user,
+                profile: "an error occured while fetching profile"
+            });
         }else{
             response.status(404).send({
                 message:'user not found'
             });    
         }
-
     }
-
 }
 
 export const getProfile = async ( profileKey : any ) =>{
@@ -82,7 +86,7 @@ export const getProfile = async ( profileKey : any ) =>{
         return url;
     }catch(error){
         console.log("error occured while fetching profile:: ",error);
-        return "error occured while fetching profile";
+        return null;
     }
 
 }

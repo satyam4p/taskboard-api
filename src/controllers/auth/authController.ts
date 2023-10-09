@@ -50,7 +50,7 @@ class AuthController{
                 const token = await user.generateAuthToken();
                 user.password = undefined;
                 user.tokens = undefined;
-                response.send({user,token});
+                response.send({user,token, message:"Successfully registered"});
             };
         }catch(error){
             console.log("some error occured while registering user:: ",error);
