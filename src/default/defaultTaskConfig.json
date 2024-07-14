@@ -1,0 +1,35 @@
+{
+  "name": {
+    "entityType": "text",
+    "entityKey": "name",
+    "label": "Title",
+    "visible": true
+  },
+  "status": {
+    "entityType": "lookup",
+    "entityKey": "status",
+    "label": "Status",
+    "visible": true,
+    "icon": "alert"
+  },
+  "label": {
+    "entityType": "text",
+    "entityKey": "label",
+    "label": "Label",
+    "visible": true,
+    "icon": "tag"
+  },
+  "description": {
+    "entityType": "text",
+    "entityKey": "description",
+    "label": "Description",
+    "visible": true
+  },
+  "assignee": {
+    "entityType": "lookup",
+    "entityKey": "asignee",
+    "label": "Assignee",
+    "visible": true,
+    "icon": "user"
+  }
+}
