@@ -1,5 +1,4 @@
 export const allowedOrigins = [
-  "https://satyamkumardev.netlify.app",
   "https://orgtaskboard.netlify.app",
   "http://orgtaskboard.netlify.app",
   "https://taskboardclient.netlify.app",
